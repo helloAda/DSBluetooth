@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "DSBluetoothConfig.h"
 
 //蓝牙状态改变
 typedef void(^DSCentralManagerStateChange)(CBCentralManager *central);
@@ -39,6 +40,9 @@ typedef void(^DSConvenientConnectFail)(void);
 ////////////////////////////////////////////////////
 
 @interface DSCallback : NSObject
+
+//蓝牙扫描，连接的参数配置
+@property (nonatomic, strong) DSBluetoothConfig *config;
 
 //// 这些都是为了持有block然后去回调中执行  /////
 

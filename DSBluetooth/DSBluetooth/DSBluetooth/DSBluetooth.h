@@ -22,6 +22,10 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
 
 //便利连接
 - (void)convenientConnectFilterRules:(DSFilterConnectPeripherals)filterRules success:(DSConvenientConnectSuccess)success fail:(DSConvenientConnectFail)fail;
+
+//蓝牙扫描，连接时的配置参数 详见DSBluetoothConfig
+- (void)config:(DSBluetoothConfig *)config;
+
 //蓝牙状态改变
 - (void)centralManagerStateChange:(DSCentralManagerStateChange)block;
 
@@ -64,6 +68,9 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
  @param fail 连接失败
  */
 - (void)convenientConnectWithIdentifier:(NSString *)identifier filterRules:(DSFilterConnectPeripherals)filterRules success:(DSConvenientConnectSuccess)success fail:(DSConvenientConnectFail)fail;
+
+//蓝牙扫描，连接时的配置参数 详见DSBluetoothConfig
+- (void)configWithIdentifier:(NSString *)identifier config:(DSBluetoothConfig *)config;
 
 //蓝牙状态改变
 - (void)centralManagerStateChangeWithIdentifier:(NSString *)identifier block:(DSCentralManagerStateChange)block;

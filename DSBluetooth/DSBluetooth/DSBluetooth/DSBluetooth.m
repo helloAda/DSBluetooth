@@ -14,6 +14,8 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 {
     BOOL _convenientConnect;        // 便利连接 连接后直接获取Characteristic
     NSInteger numOfServices;        // 服务的数量，用来判断特征是否全部加载完成
+    
+    NSMutableArray *discoverPeripherals;   //发现的设备 -- 这里如果没有强引用peripheral会被释放
 }
 
 //主设备 (该项目为手机)
@@ -53,14 +55,18 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
         _currentIdentifier = kDEFAULT_IDENTIFIER;
         DSCallback *defaultCallback  = [[DSCallback alloc] init];
         [_identifiers setObject:defaultCallback forKey:_currentIdentifier];
+        
+        discoverPeripherals = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
 #pragma mark -----  对外接口  -----
 
-- (void)startScan{
-    [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+- (void)startScan {
+    NSArray *services = [self currentCallback].config.scanForPeripheralsServices;
+    NSDictionary *options = [self currentCallback].config.scanForPeripheralsOptions;
+    [self.centralManager scanForPeripheralsWithServices:services options:options];
 }
 
 - (void)stopScan {
@@ -68,7 +74,8 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 }
 
 - (void)connectPeripheral:(CBPeripheral *)peripheral {
-    [self.centralManager connectPeripheral:peripheral options:nil];
+    NSDictionary *options = [self currentCallback].config.connectPeripheralOptions;
+    [self.centralManager connectPeripheral:peripheral options:options];
 }
 
 - (void)cancelPeripheralConnect {
@@ -137,6 +144,9 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
  */
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
     
+    if (![discoverPeripherals containsObject:peripheral]) {
+        [discoverPeripherals addObject:peripheral];
+    }
     //扫描发现设备callback
     if ([[self currentCallback] filterDiscoverPeripherals]) {
         if([[self currentCallback] filterDiscoverPeripherals](peripheral, advertisementData, RSSI)) {
@@ -167,8 +177,9 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
         [self currentCallback].connectPeripheralBlock(central, peripheral);
     }
     if (_convenientConnect) {
-        //寻找全部服务
-        [self.peripheral discoverServices:nil];
+        //寻找服务
+        NSArray *services = [self currentCallback].config.discoverServices;
+        [self.peripheral discoverServices:services];
     }
 }
 
@@ -203,8 +214,9 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     if (_convenientConnect) {
         numOfServices = peripheral.services.count;
         for (CBService *service in peripheral.services) {
-            //寻找该服务下全部特征
-            [self.peripheral discoverCharacteristics:nil forService:service];
+            //寻找该服务下特征
+            NSArray *characteristics = [self currentCallback].config.discoverCharacteristics;
+            [self.peripheral discoverCharacteristics:characteristics forService:service];
         }
     }
 }
@@ -216,7 +228,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     }
     if (_convenientConnect) {
         numOfServices--;
-        //将全部特征加入特征数组，提供给后续使用
+        //将搜索到的特征加入特征数组，提供给后续使用
         for (CBCharacteristic *characteristic in service.characteristics) {
             [self.characteristics addObject:characteristic];
         }
@@ -252,6 +264,10 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     _convenientConnect = YES;
 }
 
+//蓝牙扫描，连接时的配置参数 详见DSBluetoothConfig
+- (void)config:(DSBluetoothConfig *)config {
+    [self callback].config = config;
+}
 //蓝牙状态改变
 - (void)centralManagerStateChange:(DSCentralManagerStateChange)block {
     [self callback].centralManagerStateChange = block;
@@ -310,6 +326,11 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     [self callbackWithIdentifier:identifier].convenientConnectSuccess = success;
     [self callbackWithIdentifier:identifier].convenientConnectFail = fail;
     _convenientConnect = YES;
+}
+
+//蓝牙扫描，连接时的配置参数
+- (void)configWithIdentifier:(NSString *)identifier config:(DSBluetoothConfig *)config {
+    [self callbackWithIdentifier:identifier].config = config;
 }
 
 //蓝牙状态改变

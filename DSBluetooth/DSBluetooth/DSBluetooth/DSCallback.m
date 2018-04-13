@@ -15,14 +15,14 @@
     self = [super init];
     if (self) {
         [self setFilterDiscoverPeripherals:^(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
-            if (![peripheral.name isEqualToString:@""]) {
+            if (peripheral.name) {
                 return YES;
             }
             return NO;
         }];
         
         [self setFilterConnectPeripherals:^(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
-            if (![peripheral.name isEqualToString:@""]) {
+            if (peripheral.name) {
                 return YES;
             }
             return NO;
