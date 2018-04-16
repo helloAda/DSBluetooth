@@ -139,5 +139,9 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
 //蓝牙是否可用
 - (BOOL)bluetoothIsPoweredOn;
 
+//蓝牙管理类
+- (CBCentralManager *)centralManager;
 
+//当前连接设备
+- (CBPeripheral *)peripheral;
 @end

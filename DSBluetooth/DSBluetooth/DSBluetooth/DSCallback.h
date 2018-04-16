@@ -43,6 +43,12 @@ typedef void(^DSConvenientConnectFail)(void);
 
 //蓝牙扫描，连接的参数配置
 @property (nonatomic, strong) DSBluetoothConfig *config;
+/*
+ 连接后是否直接获取Characteristic 默认为NO
+ convenientConnectWithIdentifier: filterRules: success: fail: 这个方法里面会设置为YES
+ */
+@property (nonatomic, assign) BOOL convenientConnect;
+
 
 //// 这些都是为了持有block然后去回调中执行  /////
 

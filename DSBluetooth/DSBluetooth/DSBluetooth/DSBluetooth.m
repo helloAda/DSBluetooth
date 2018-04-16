@@ -12,9 +12,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 
 @interface DSBluetooth ()<CBCentralManagerDelegate,CBPeripheralDelegate>
 {
-    BOOL _convenientConnect;        // 便利连接 连接后直接获取Characteristic
     NSInteger numOfServices;        // 服务的数量，用来判断特征是否全部加载完成
-    
     NSMutableArray *discoverPeripherals;   //发现的设备 -- 这里如果没有强引用peripheral会被释放
 }
 
@@ -48,7 +46,6 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     if (self) {
         _centralManager    = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
         _characteristics   = [[NSMutableArray alloc] init];
-        _convenientConnect = NO;
 
         //构建默认标记的回调对象
         _identifiers       = [[NSMutableDictionary alloc] init];
@@ -85,7 +82,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 }
 
 - (void)writeData:(NSData *)data characteristic:(CBCharacteristic *)characteristic WithResponse:(BOOL)yesOrNo {
-    if (!self.peripheral) return;
+    if (!self.peripheral || !characteristic) return;
     if (yesOrNo) {
         [self.peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
     } else {
@@ -93,14 +90,14 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     }
 }
 
-- (void)readCharacteristic:(CBCharacteristic *)Characteristic {
-    if (self.peripheral) {
-        [self.peripheral readValueForCharacteristic:Characteristic];
+- (void)readCharacteristic:(CBCharacteristic *)characteristic {
+    if (self.peripheral && characteristic) {
+        [self.peripheral readValueForCharacteristic:characteristic];
     }
 }
 
 - (void)listenForNotification:(BOOL)isNotify characteristic:(CBCharacteristic *)characteristic {
-    if (self.peripheral) {
+    if (self.peripheral && characteristic) {
         [self.peripheral setNotifyValue:isNotify forCharacteristic:characteristic];
     }
 }
@@ -121,6 +118,13 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     return NO;
 }
 
+- (CBCentralManager *)centralManager {
+    return _centralManager;
+}
+
+- (CBPeripheral *)peripheral {
+    return _peripheral;
+}
 #pragma mark   --- CBCentralManagerDelegate 主设备相关代理
 
 //蓝牙状态改变时
@@ -176,7 +180,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     if ([self currentCallback].connectPeripheralBlock) {
         [self currentCallback].connectPeripheralBlock(central, peripheral);
     }
-    if (_convenientConnect) {
+    if ([self currentCallback].convenientConnect) {
         //寻找服务
         NSArray *services = [self currentCallback].config.discoverServices;
         [self.peripheral discoverServices:services];
@@ -188,13 +192,15 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     if ([self currentCallback].failConnectPeripheralBlock) {
         [self currentCallback].failConnectPeripheralBlock(central, peripheral, error);
     }
-    if (_convenientConnect && [self callback].convenientConnectFail) {
+    if ([self currentCallback].convenientConnect && [self callback].convenientConnectFail) {
         [self currentCallback].convenientConnectFail();
     }
 }
 
 //断开链接时(主动断开||其他因素断开)
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    self.peripheral = nil;
+    [_characteristics removeAllObjects];
     if ([self currentCallback].disconnectPeripheralBlock) {
         [self currentCallback].disconnectPeripheralBlock(central, peripheral, error);
     }
@@ -211,7 +217,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     if ([self currentCallback].peripheralDiscoverServices) {
         [self currentCallback].peripheralDiscoverServices(peripheral, error);
     }
-    if (_convenientConnect) {
+    if ([self currentCallback].convenientConnect) {
         numOfServices = peripheral.services.count;
         for (CBService *service in peripheral.services) {
             //寻找该服务下特征
@@ -226,7 +232,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     if ([self currentCallback].servicesDiscoverCharacteristics) {
         [self currentCallback].servicesDiscoverCharacteristics(peripheral, service, error);
     }
-    if (_convenientConnect) {
+    if ([self currentCallback].convenientConnect) {
         numOfServices--;
         //将搜索到的特征加入特征数组，提供给后续使用
         for (CBCharacteristic *characteristic in service.characteristics) {
@@ -261,7 +267,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     [self callback].filterConnectPeripherals = filterRules;
     [self callback].convenientConnectSuccess = success;
     [self callback].convenientConnectFail = fail;
-    _convenientConnect = YES;
+    [self callback].convenientConnect = YES;
 }
 
 //蓝牙扫描，连接时的配置参数 详见DSBluetoothConfig
@@ -325,7 +331,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     [self callbackWithIdentifier:identifier].filterConnectPeripherals = filterRules;
     [self callbackWithIdentifier:identifier].convenientConnectSuccess = success;
     [self callbackWithIdentifier:identifier].convenientConnectFail = fail;
-    _convenientConnect = YES;
+    [self callbackWithIdentifier:identifier].convenientConnect = YES;
 }
 
 //蓝牙扫描，连接时的配置参数

@@ -20,13 +20,6 @@
             }
             return NO;
         }];
-        
-        [self setFilterConnectPeripherals:^(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
-            if (peripheral.name) {
-                return YES;
-            }
-            return NO;
-        }];
     }
     return self;
 }
