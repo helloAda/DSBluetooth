@@ -24,6 +24,8 @@ typedef void(^DSDisconnectPeripheralBlock)(CBCentralManager *central, CBPeripher
 typedef void(^DSPeripheralDiscoverServices)(CBPeripheral *peripheral, NSError *error);
 //发现外设特征
 typedef void(^DSServicesDiscoverCharacteristics)(CBPeripheral *peripheral, CBService *service, NSError *error);
+//发现特征描述
+typedef void(^DSCharacteristicsDiscoverDescriptor)(CBPeripheral *peripheral, CBCharacteristic *characteristic, NSError *error);
 //写入数据在特征时回调(有response才有)
 typedef void(^DSWriteValueForCharacteristic)(CBPeripheral *peripheral, CBCharacteristic *characteristic, NSError *error);
 //收到特征传来的数据（基本可以说这是唯一拿数据的回调）
@@ -32,6 +34,8 @@ typedef void(^DSUpdateValueForCharacteristic)(CBPeripheral *peripheral, CBCharac
 typedef BOOL(^DSFilterDiscoverPeripherals)(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI);
 //筛选需要连接的peripherals规则
 typedef BOOL(^DSFilterConnectPeripherals)(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI);
+//超时处理
+typedef void(^DSTimeoutHandlingBlock)(CBPeripheral *peripheral);
 
 //便利连接回调
 typedef void(^DSConvenientConnectSuccess)(void);
@@ -59,11 +63,13 @@ typedef void(^DSConvenientConnectFail)(void);
 @property (nonatomic, copy) DSDisconnectPeripheralBlock disconnectPeripheralBlock;
 @property (nonatomic, copy) DSPeripheralDiscoverServices peripheralDiscoverServices;
 @property (nonatomic, copy) DSServicesDiscoverCharacteristics servicesDiscoverCharacteristics;
+@property (nonatomic, copy) DSCharacteristicsDiscoverDescriptor characteristicsDiscoverDescriptor;
 @property (nonatomic, copy) DSWriteValueForCharacteristic writeValueForCharacteristic;
 @property (nonatomic, copy) DSUpdateValueForCharacteristic updateValueForCharacteristic;
 @property (nonatomic, copy) DSConvenientConnectSuccess convenientConnectSuccess;
 @property (nonatomic, copy) DSConvenientConnectFail convenientConnectFail;
 @property (nonatomic, copy) DSFilterDiscoverPeripherals filterDiscoverPeripherals;
 @property (nonatomic, copy) DSFilterConnectPeripherals filterConnectPeripherals;
+@property (nonatomic, copy) DSTimeoutHandlingBlock timeoutHandlingBlock;
 //// 这些都是为了持有block然后去回调中执行  /////
 @end

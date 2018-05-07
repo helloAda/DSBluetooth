@@ -17,6 +17,12 @@
 		0E1FD001207B5F87000037CC /* DSBluetoothUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1FD000207B5F87000037CC /* DSBluetoothUITests.m */; };
 		0E1FD015207B5FD6000037CC /* DSBluetooth.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1FD013207B5FD6000037CC /* DSBluetooth.m */; };
 		0E1FD016207B5FD6000037CC /* DSCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1FD014207B5FD6000037CC /* DSCallback.m */; };
+		0E45EDAD209FEC7B0049EF58 /* DSSettingDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E45EDAA209FEC7B0049EF58 /* DSSettingDataSource.m */; };
+		0E45EDAE209FEC7B0049EF58 /* DSSettingItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E45EDAB209FEC7B0049EF58 /* DSSettingItem.m */; };
+		0E45EDAF209FEC7B0049EF58 /* DSSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E45EDAC209FEC7B0049EF58 /* DSSettingCell.m */; };
+		0E45EDB2209FEE880049EF58 /* BindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E45EDB1209FEE880049EF58 /* BindViewController.m */; };
+		0E45EDB5209FEE9F0049EF58 /* ConnectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E45EDB4209FEE9F0049EF58 /* ConnectViewController.m */; };
+		0E45EDB8209FF66F0049EF58 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E45EDB7209FF66E0049EF58 /* UIView+Toast.m */; };
 		0EB71E74207EEF7E00013D58 /* DSBluetoothConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB71E73207EEF7E00013D58 /* DSBluetoothConfig.m */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +64,18 @@
 		0E1FD012207B5FD5000037CC /* DSBluetooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DSBluetooth.h; sourceTree = "<group>"; };
 		0E1FD013207B5FD6000037CC /* DSBluetooth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DSBluetooth.m; sourceTree = "<group>"; };
 		0E1FD014207B5FD6000037CC /* DSCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DSCallback.m; sourceTree = "<group>"; };
+		0E45EDA7209FEC7A0049EF58 /* DSSettingItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DSSettingItem.h; sourceTree = "<group>"; };
+		0E45EDA8209FEC7A0049EF58 /* DSSettingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DSSettingCell.h; sourceTree = "<group>"; };
+		0E45EDA9209FEC7A0049EF58 /* DSSettingDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DSSettingDataSource.h; sourceTree = "<group>"; };
+		0E45EDAA209FEC7B0049EF58 /* DSSettingDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DSSettingDataSource.m; sourceTree = "<group>"; };
+		0E45EDAB209FEC7B0049EF58 /* DSSettingItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DSSettingItem.m; sourceTree = "<group>"; };
+		0E45EDAC209FEC7B0049EF58 /* DSSettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DSSettingCell.m; sourceTree = "<group>"; };
+		0E45EDB0209FEE880049EF58 /* BindViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BindViewController.h; sourceTree = "<group>"; };
+		0E45EDB1209FEE880049EF58 /* BindViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BindViewController.m; sourceTree = "<group>"; };
+		0E45EDB3209FEE9F0049EF58 /* ConnectViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConnectViewController.h; sourceTree = "<group>"; };
+		0E45EDB4209FEE9F0049EF58 /* ConnectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConnectViewController.m; sourceTree = "<group>"; };
+		0E45EDB6209FF66E0049EF58 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		0E45EDB7209FF66E0049EF58 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
 		0EB71E72207EEF7E00013D58 /* DSBluetoothConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DSBluetoothConfig.h; sourceTree = "<group>"; };
 		0EB71E73207EEF7E00013D58 /* DSBluetoothConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DSBluetoothConfig.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,6 +133,11 @@
 				0E1FCFDD207B5F84000037CC /* AppDelegate.m */,
 				0E1FCFDF207B5F84000037CC /* ViewController.h */,
 				0E1FCFE0207B5F84000037CC /* ViewController.m */,
+				0E45EDB0209FEE880049EF58 /* BindViewController.h */,
+				0E45EDB1209FEE880049EF58 /* BindViewController.m */,
+				0E45EDB3209FEE9F0049EF58 /* ConnectViewController.h */,
+				0E45EDB4209FEE9F0049EF58 /* ConnectViewController.m */,
+				0E45EDA6209FEC6B0049EF58 /* Other */,
 				0E1FCFE2207B5F84000037CC /* Main.storyboard */,
 				0E1FCFE5207B5F87000037CC /* Assets.xcassets */,
 				0E1FCFE7207B5F87000037CC /* LaunchScreen.storyboard */,
@@ -153,6 +176,21 @@
 				0EB71E73207EEF7E00013D58 /* DSBluetoothConfig.m */,
 			);
 			path = DSBluetooth;
+			sourceTree = "<group>";
+		};
+		0E45EDA6209FEC6B0049EF58 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				0E45EDB6209FF66E0049EF58 /* UIView+Toast.h */,
+				0E45EDB7209FF66E0049EF58 /* UIView+Toast.m */,
+				0E45EDA8209FEC7A0049EF58 /* DSSettingCell.h */,
+				0E45EDAC209FEC7B0049EF58 /* DSSettingCell.m */,
+				0E45EDA9209FEC7A0049EF58 /* DSSettingDataSource.h */,
+				0E45EDAA209FEC7B0049EF58 /* DSSettingDataSource.m */,
+				0E45EDA7209FEC7A0049EF58 /* DSSettingItem.h */,
+				0E45EDAB209FEC7B0049EF58 /* DSSettingItem.m */,
+			);
+			path = Other;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,11 +323,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E45EDB8209FF66F0049EF58 /* UIView+Toast.m in Sources */,
+				0E45EDAD209FEC7B0049EF58 /* DSSettingDataSource.m in Sources */,
 				0E1FCFE1207B5F84000037CC /* ViewController.m in Sources */,
 				0E1FD015207B5FD6000037CC /* DSBluetooth.m in Sources */,
+				0E45EDB2209FEE880049EF58 /* BindViewController.m in Sources */,
 				0E1FCFEC207B5F87000037CC /* main.m in Sources */,
 				0EB71E74207EEF7E00013D58 /* DSBluetoothConfig.m in Sources */,
 				0E1FD016207B5FD6000037CC /* DSCallback.m in Sources */,
+				0E45EDAF209FEC7B0049EF58 /* DSSettingCell.m in Sources */,
+				0E45EDB5209FEE9F0049EF58 /* ConnectViewController.m in Sources */,
+				0E45EDAE209FEC7B0049EF58 /* DSSettingItem.m in Sources */,
 				0E1FCFDE207B5F84000037CC /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -460,6 +504,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M3WM4WM6Y4;
 				INFOPLIST_FILE = DSBluetooth/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -477,6 +522,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M3WM4WM6Y4;
 				INFOPLIST_FILE = DSBluetooth/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (

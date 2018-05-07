@@ -47,6 +47,9 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
 //发现外设特征
 - (void)servicesDiscoverCharacteristics:(DSServicesDiscoverCharacteristics)block;
 
+//发现特征描述
+- (void)characteristicsDiscoverDescriptorBlock:(DSCharacteristicsDiscoverDescriptor)block;
+
 //写入数据到特征
 - (void)writeValueForCharacteristic:(DSWriteValueForCharacteristic)block;
 
@@ -56,7 +59,8 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
 //筛选发现到的peripherals规则
 - (void)filterOnDiscoverPeripherals:(DSFilterDiscoverPeripherals)block;
 
-
+//便利连接超时处理
+- (void)timeoutHandingBlock:(DSTimeoutHandlingBlock)block;
 #pragma mark --- 带标记的回调方法  适用于在不同界面使用 ---
 
 /**
@@ -93,6 +97,9 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
 //发现外设特征
 - (void)servicesDiscoverCharacteristicsWithIdentifier:(NSString *)identifier block:(DSServicesDiscoverCharacteristics)block;
 
+//发现特征描述
+- (void)characteristicsDiscoverDescriptorWithIdentifier:(NSString *)identifier block:(DSCharacteristicsDiscoverDescriptor)block;
+
 //写入数据到特征
 - (void)writeValueForCharacteristicWithIdentifier:(NSString *)identifier block:(DSWriteValueForCharacteristic)block;
 
@@ -101,6 +108,9 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
 
 //筛选发现到的peripherals规则
 - (void)filterOnDiscoverPeripheralsWithIdentifier:(NSString *)idebtifier block:(DSFilterDiscoverPeripherals)block;
+
+//便利连接超时处理
+- (void)timeoutHandingWithIdentifier:(NSString *)idebtifier block:(DSTimeoutHandlingBlock)block;
 
 #pragma mark -- 标记切换用于查找回调block --
 

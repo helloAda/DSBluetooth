@@ -26,7 +26,8 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 @property (nonatomic, strong) NSMutableDictionary *identifiers;
 // 当前的标记
 @property (nonatomic, copy)   NSString *currentIdentifier;
-
+//定时器 默认10s
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 @implementation DSBluetooth
@@ -44,7 +45,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 {
     self = [super init];
     if (self) {
-        _centralManager    = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+        _centralManager    = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:nil];
         _characteristics   = [[NSMutableArray alloc] init];
 
         //构建默认标记的回调对象
@@ -148,6 +149,7 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
  */
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
     
+    //需要强引用 否则会被释放掉
     if (![discoverPeripherals containsObject:peripheral]) {
         [discoverPeripherals addObject:peripheral];
     }
@@ -164,6 +166,8 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     if ([[self currentCallback] filterConnectPeripherals]) {
         if([[self currentCallback] filterConnectPeripherals](peripheral, advertisementData, RSSI)) {
             [self connectPeripheral:peripheral];
+            //判断超时
+            _timer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(timeoutHandling:) userInfo:nil repeats:NO];
         }
     }
     
@@ -172,11 +176,12 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 
 //设备连接成功
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
-    
+    [_timer invalidate];//停止超时判断
     [self stopScan];
     self.peripheral = peripheral;
     self.peripheral.delegate = self;
-    
+    //已经强引用了需要的设备 可以移除了
+    [discoverPeripherals removeAllObjects];
     if ([self currentCallback].connectPeripheralBlock) {
         [self currentCallback].connectPeripheralBlock(central, peripheral);
     }
@@ -245,6 +250,13 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     }
 }
 
+//发现Characteristics的Descriptors
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(nonnull CBCharacteristic *)characteristic error:(nullable NSError *)error {
+    if ([self currentCallback].characteristicsDiscoverDescriptor) {
+        [self currentCallback].characteristicsDiscoverDescriptor(peripheral, characteristic, error);
+    }
+}
+
 //写入数据到特征时回调
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     if ([self currentCallback].writeValueForCharacteristic) {
@@ -309,6 +321,12 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     [self callback].servicesDiscoverCharacteristics = block;
 }
 
+//发现特征描述
+
+- (void)characteristicsDiscoverDescriptorBlock:(DSCharacteristicsDiscoverDescriptor)block {
+    [self callback].characteristicsDiscoverDescriptor = block;
+}
+
 //写入数据到特征
 - (void)writeValueForCharacteristic:(DSWriteValueForCharacteristic)block {
     [self callback].writeValueForCharacteristic = block;
@@ -322,6 +340,10 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 //筛选发现到的peripherals规则
 - (void)filterOnDiscoverPeripherals:(DSFilterDiscoverPeripherals)block {
     [self callback].filterDiscoverPeripherals = block;
+}
+
+- (void)timeoutHandingBlock:(DSTimeoutHandlingBlock)block {
+    [self callback].timeoutHandlingBlock = block;
 }
 
 #pragma mark --- 带标记的回调方法  适用于在不同界面使用 ---
@@ -374,6 +396,12 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     [self callbackWithIdentifier:identifier].servicesDiscoverCharacteristics = block;
 }
 
+//发现特征描述
+- (void)characteristicsDiscoverDescriptorWithIdentifier:(NSString *)identifier block:(DSCharacteristicsDiscoverDescriptor)block {
+    [self callbackWithIdentifier:identifier].characteristicsDiscoverDescriptor = block;
+
+}
+
 //写入数据到特征
 - (void)writeValueForCharacteristicWithIdentifier:(NSString *)identifier block:(DSWriteValueForCharacteristic)block {
     [self callbackWithIdentifier:identifier].writeValueForCharacteristic = block;
@@ -389,6 +417,10 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     [self callbackWithIdentifier:idebtifier].filterDiscoverPeripherals = block;
 }
 
+//超时处理
+- (void)timeoutHandingWithIdentifier:(NSString *)idebtifier block:(DSTimeoutHandlingBlock)block {
+    [self callbackWithIdentifier:idebtifier].timeoutHandlingBlock = block;
+}
 #pragma mark -- 标记切换 查找回调block --
 
 - (void)switchIdentifier:(NSString *)identifier {
@@ -427,4 +459,11 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     return callback;
 }
 
+#pragma mark --- 超时处理
+
+- (void)timeoutHandling:(CBPeripheral *)perioheral {
+    [_timer invalidate];
+    [self stopScan];
+    [self currentCallback].timeoutHandlingBlock(perioheral);
+}
 @end
