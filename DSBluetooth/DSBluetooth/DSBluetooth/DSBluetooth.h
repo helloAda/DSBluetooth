@@ -146,6 +146,9 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
 //找到对应特征值
 - (CBCharacteristic *)findCharacteristicFormUUIDString:(NSString *)UUIDString;
 
+// 外设的特征值
+- (NSMutableArray *)characteristics;
+
 //蓝牙是否可用
 - (BOOL)bluetoothIsPoweredOn;
 
@@ -154,4 +157,7 @@ extern NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateSt
 
 //当前连接设备
 - (CBPeripheral *)peripheral;
+
+//扫描发现的设备集合 连接后清空
+- (NSMutableArray *)discoverPeripherals;
 @end

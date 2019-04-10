@@ -112,6 +112,10 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
     return nil;
 }
 
+- (NSMutableArray *)characteristics {
+    return _characteristics;
+}
+
 - (BOOL)bluetoothIsPoweredOn {
     if (self.centralManager.state == CBCentralManagerStatePoweredOn) {
         return YES;
@@ -126,6 +130,11 @@ NSNotificationName const DSBluetoothNotificationCentralManagerDidUpdateState = @
 - (CBPeripheral *)peripheral {
     return _peripheral;
 }
+
+- (NSMutableArray *)discoverPeripherals {
+    return discoverPeripherals;
+}
+
 #pragma mark   --- CBCentralManagerDelegate 主设备相关代理
 
 //蓝牙状态改变时
